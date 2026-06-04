@@ -29,7 +29,7 @@
       background: var(--paper);
     }
     h1, h2, h3, nav, .label, .tag, .btn { font-family: 'Space Grotesk', sans-serif; }
- 
+
     /* NAV */
     nav {
       position: sticky; top: 0; z-index: 100;
@@ -47,7 +47,7 @@
     nav ul { list-style: none; display: flex; gap: 1.15rem; flex-wrap: wrap; }
     nav a { color: #c9c1b4; text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
     nav a:hover { color: var(--accent-soft); }
- 
+
     /* HERO */
     header {
       background: #14110f; color: var(--paper);
@@ -69,7 +69,7 @@
     .hero h1 em { color: var(--accent-soft); font-style: normal; }
     .hero p.sub { font-size: 1.15rem; color: #e8d4dd; margin-top: 1.5rem; max-width: 620px; }
     .hero .meta { margin-top: 2rem; font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; color: #c9a8b6; letter-spacing: 0.04em; }
- 
+
     /* SECTIONS */
     section { max-width: 860px; margin: 0 auto; padding: 4rem 1.5rem; border-bottom: 1px solid var(--line); }
     .label {
@@ -84,12 +84,12 @@
     ul.clean { list-style: none; margin: 1rem 0; }
     ul.clean li { padding-left: 1.5rem; position: relative; margin-bottom: 0.7rem; }
     ul.clean li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; }
- 
+
     .rq {
       font-family: 'Source Serif 4', serif; font-style: italic; font-size: 1.3rem; line-height: 1.5;
       border-left: 3px solid var(--accent); padding: 0.5rem 0 0.5rem 1.5rem; margin: 1.5rem 0; color: #6b4f5a;
     }
- 
+
     /* CODE */
     pre {
       background: var(--code-bg); color: var(--code-fg);
@@ -98,7 +98,7 @@
       border: 1px solid #2c2722;
     }
     pre .kw { color: #e87fa5; font-weight: 500; }
- 
+
     /* QUERY CARD */
     .qcard { background: var(--paper-2); border: 1px solid var(--line); border-radius: 12px; padding: 1.5rem 1.6rem; margin: 1.5rem 0; }
     .qcard h3 { margin-top: 0; }
@@ -109,33 +109,47 @@
       padding: 1.5rem; text-align: center; color: var(--accent);
       font-family: 'Space Grotesk', sans-serif; font-size: 0.82rem; background: #fdeef4; margin: 1rem 0;
     }
- 
+    .screenshot {
+      width: 100%; max-width: 760px; height: auto; display: block;
+      margin: 1rem auto; border-radius: 8px; border: 1px solid var(--line);
+      box-shadow: 0 2px 12px rgba(20,17,15,0.08);
+    }
+    .shot-caption {
+      text-align: center; font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.78rem; color: var(--muted); margin: 0.3rem 0 1.5rem;
+    }
+    .shot-group { margin: 1rem 0; }
+    .shot-group .model-label {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: 0.92rem; color: var(--accent); margin: 1.5rem 0 0.3rem;
+    }
+
     .gap {
       background: #14110f; color: var(--paper); border-radius: 14px; padding: 2rem; margin: 1.5rem 0;
     }
     .gap h3 { color: var(--accent-soft); margin-top: 0; }
     .gap .shot { background: #2a2520; border-color: var(--accent-soft); color: var(--accent-soft); }
     .gap a { color: var(--accent-soft); }
- 
+
     /* PROMPT BOX */
     .prompt { background: var(--paper-2); border-radius: 10px; padding: 1.1rem 1.3rem; font-style: italic; font-size: 0.95rem; color: #14110f; margin: 0.8rem 0; border-left: 3px solid var(--accent-soft); }
- 
+
     /* MODEL GRID */
     .models { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.8rem; margin: 1.2rem 0; }
     .model { background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.1rem; }
     .model .name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; }
     .model .desc { font-size: 0.85rem; color: var(--ink); line-height: 1.5; }
- 
+
     footer { background: #14110f; color: #c9a8b6; text-align: center; padding: 3rem 1.5rem; font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; }
     footer a { color: var(--accent-soft); }
     footer .big { color: var(--paper); font-weight: 500; font-size: 1rem; margin-bottom: 0.5rem; }
- 
+
     @media (max-width: 600px) {
       body { font-size: 16px; }
       nav ul { gap: 0.7rem; }
       nav a { font-size: 0.75rem; }
     }
- 
+
     .authors { display: flex; justify-content: center; gap: 2.5rem; margin: 2.5rem 0 1.5rem; flex-wrap: wrap; }
     .author { display: flex; flex-direction: column; align-items: center; gap: 0.7rem; }
     .author .photo { width: 110px; height: 110px; border-radius: 10px; overflow: hidden; border: 2px solid var(--accent-soft); background: #2a2520; }
@@ -145,7 +159,7 @@
   </style>
 </head>
 <body>
- 
+
 <nav>
   <div class="wrap">
     <div class="brand">Deepfake<span>·KG</span></div>
@@ -162,7 +176,7 @@
     </ul>
   </div>
 </nav>
- 
+
 <header>
   <div class="hero">
     <span class="tag">Progetto GEPID · Knowledge Engineering</span>
@@ -171,7 +185,7 @@
     <p class="meta">Università di Bologna · Prof.ssa Valentina Presutti · Corso GEPID</p>
   </div>
 </header>
- 
+
 <section id="intro">
   <span class="label">01 — Introduzione</span>
   <h2>Il problema e la domanda di ricerca</h2>
@@ -179,7 +193,7 @@
   <p>Nonostante l'esistenza di Knowledge Graph strutturati come <a href="https://dbpedia.org" target="_blank">DBpedia</a>, molte informazioni relative ai deepfake politici non sono rappresentate semanticamente: manca la tecnica manipolativa utilizzata, l'emozione bersaglio, il livello di rischio democratico, la piattaforma di diffusione e il contesto socio-politico.</p>
   <p class="rq">"In che modo i Large Language Models possono essere utilizzati per arricchire semanticamente la rappresentazione degli eventi di deepfake politico nei Knowledge Graph esistenti?"</p>
 </section>
- 
+
 <section id="metodologia">
   <span class="label">02 — Metodologia</span>
   <h2>L'approccio in quattro fasi</h2>
@@ -197,34 +211,36 @@
     <a href="https://gemini.google.com" target="_blank">Gemini</a> ·
     <a href="https://chat.deepseek.com" target="_blank">DeepSeek</a>
   </p>
+  <h3>Workflow del progetto</h3>
+  <img class="screenshot" src="semantica_enrichment_workflow.png" alt="Semantic Enrichment Workflow"><p class="shot-caption">Figura 1 — Workflow adottato per l'esplorazione del Knowledge Graph e l'arricchimento semantico tramite Large Language Models.</p>
 </section>
- 
+
 <section id="sparql">
   <span class="label">03 — Esplorazione</span>
   <h2>Query SPARQL su DBpedia</h2>
   <p>L'obiettivo delle query non è solo trovare i politici, ma dimostrare concretamente che DBpedia contiene informazioni su <a href="http://dbpedia.org/resource/Donald_Trump" target="_blank">Donald Trump</a>, <a href="http://dbpedia.org/resource/Joe_Biden" target="_blank">Joe Biden</a> e <a href="http://dbpedia.org/resource/Giorgia_Meloni" target="_blank">Giorgia Meloni</a> come politici, ma non contiene alcuna informazione sugli eventi deepfake che li riguardano. Ogni query affina progressivamente la precedente, avvicinandosi sempre di più ai soli tre politici di interesse.</p>
- 
+
   <div class="qcard">
     <div class="qkeys"><span>DISTINCT</span><span>LIMIT</span></div>
     <h3>Query 1 — Entità politiche di base</h3>
     <p>Verifica preliminare della presenza di entità politiche nel Knowledge Graph.</p>
     <pre>PREFIX dbo: &lt;http://dbpedia.org/ontology/&gt;
- 
+
 SELECT DISTINCT ?x
 WHERE {
   ?x a dbo:Politician .
 }
 LIMIT 10</pre>
-    <div class="shot">⬚ Inserire screenshot dei risultati della Query 1</div>
+    <img class="screenshot" src="query1.png" alt="Risultati Query 1"><p class="shot-caption">Risultati della Query 1 — entità politiche in DBpedia</p>
   </div>
- 
+
   <div class="qcard">
     <div class="qkeys"><span>DISTINCT</span><span>FILTER</span><span>LIMIT</span></div>
     <h3>Query 2 — Ricerca politici specifici</h3>
     <p>Ricerca mirata di Trump, Biden e Meloni. Emerge subito un problema: la query restituisce anche parenti e persone con lo stesso cognome (Arianna Meloni, Beau Biden, Ivanka Trump), perché CONTAINS cerca la sottostringa ovunque nel nome.</p>
     <pre>PREFIX dbo: &lt;http://dbpedia.org/ontology/&gt;
 PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
- 
+
 SELECT DISTINCT ?person ?label
 WHERE {
   ?person a dbo:Politician ;
@@ -237,9 +253,9 @@ WHERE {
   )
 }
 LIMIT 20</pre>
-    <div class="shot">⬚ Inserire screenshot dei risultati della Query 2</div>
+    <img class="screenshot" src="query2.png" alt="Risultati Query 2"><p class="shot-caption">Risultati della Query 2 — Trump, Biden e Meloni (con omonimi e parenti)</p>
   </div>
- 
+
   <div class="qcard">
     <div class="qkeys"><span>ORDER BY</span></div>
     <h3>Query 3 — Ordinamento dei risultati</h3>
@@ -257,9 +273,9 @@ WHERE {
 }
 ORDER BY ?label
 LIMIT 20</pre>
-    <div class="shot">⬚ Inserire screenshot dei risultati della Query 3</div>
+    <img class="screenshot" src="query3.png" alt="Risultati Query 3"><p class="shot-caption">Risultati della Query 3 — ordinati alfabeticamente con ORDER BY</p>
   </div>
- 
+
   <div class="qcard">
     <div class="qkeys"><span>OPTIONAL</span></div>
     <h3>Query 4 — Informazioni opzionali</h3>
@@ -278,9 +294,9 @@ WHERE {
 }
 ORDER BY ?label
 LIMIT 20</pre>
-    <div class="shot">⬚ Inserire screenshot dei risultati della Query 4</div>
+    <img class="screenshot" src="query4.png" alt="Risultati Query 4"><p class="shot-caption">Risultati della Query 4 — con OPTIONAL: alcuni politici hanno l'immagine, altri no</p>
   </div>
- 
+
   <div class="qcard">
     <div class="qkeys"><span>UNION</span></div>
     <h3>Query 5 — Unione di categorie</h3>
@@ -307,9 +323,9 @@ WHERE {
 }
 ORDER BY ?type ?label
 LIMIT 20</pre>
-    <div class="shot">⬚ Inserire screenshot dei risultati della Query 5</div>
+    <img class="screenshot" src="query5.png" alt="Risultati Query 5"><p class="shot-caption">Risultati della Query 5 — politici e partiti uniti con UNION</p>
   </div>
- 
+
   <div class="qcard">
     <div class="qkeys"><span>REGEX</span></div>
     <h3>Query 6 — Selezione esatta</h3>
@@ -322,17 +338,17 @@ WHERE {
   FILTER(REGEX(?label, "^(Donald Trump|Joe Biden|Giorgia Meloni)$", "i"))
 }
 ORDER BY ?label</pre>
-    <div class="shot">⬚ Inserire screenshot dei risultati della Query 6</div>
+    <img class="screenshot" src="query6.png" alt="Risultati Query 6"><p class="shot-caption">Risultati della Query 6 — solo i tre politici esatti grazie a REGEX</p>
   </div>
 </section>
- 
+
 <section id="gap">
   <span class="label">04 — Il cuore del progetto</span>
   <h2>Il gap semantico, dimostrato</h2>
   <div class="gap">
     <h3>Query 7 — Ricerca "deepfake" in DBpedia → zero risultati</h3>
     <pre>PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
- 
+
 SELECT DISTINCT ?x ?label
 WHERE {
   ?x rdfs:label ?label .
@@ -341,31 +357,58 @@ WHERE {
 }
 LIMIT 10</pre>
     <p>La query restituisce <strong>zero risultati</strong>. DBpedia conosce <a href="http://dbpedia.org/resource/Joe_Biden" target="_blank">Joe Biden</a>, <a href="http://dbpedia.org/resource/Donald_Trump" target="_blank">Donald Trump</a> e <a href="http://dbpedia.org/resource/Giorgia_Meloni" target="_blank">Giorgia Meloni</a> come entità politiche strutturate, ma non contiene alcuna rappresentazione semantica degli eventi deepfake che li riguardano. È esattamente questa mancanza che il progetto si propone di colmare attraverso i Large Language Models.</p>
-    <div class="shot">⬚ Inserire screenshot della Query 7 (risultato vuoto)</div>
+    <img class="screenshot" src="query7.png" alt="Risultati Query 7 - zero risultati"><p class="shot-caption">Risultati della Query 7 — zero risultati: il gap semantico è dimostrato</p>
   </div>
 </section>
- 
+
 <section id="llm">
   <span class="label">05 — Arricchimento</span>
   <h2>Tre tecniche di prompting, quattro modelli</h2>
   <p>Per generare nuove triple RDF che colmino il gap, sono state applicate tre tecniche di prompting a quattro modelli linguistici: <a href="https://chat.openai.com" target="_blank">ChatGPT</a>, <a href="https://claude.ai" target="_blank">Claude</a>, <a href="https://gemini.google.com" target="_blank">Gemini</a> e <a href="https://chat.deepseek.com" target="_blank">DeepSeek</a>. Per ciascuna tecnica è stato usato un evento di deepfake diverso, per dimostrare la generalizzabilità dell'approccio.</p>
- 
+
   <h3>Tecnica 1 — Zero-Shot</h3>
   <p>Si chiede direttamente al modello di generare le triple, senza fornire esempi.</p>
   <div class="prompt">"Genera triple RDF in formato Turtle per rappresentare semanticamente il seguente evento: un video deepfake del presidente americano Joe Biden è stato diffuso su TikTok nel 2024 durante la campagna elettorale, con l'obiettivo di indurre paura negli elettori e screditare il candidato."</div>
-  <div class="shot">⬚ Inserire screenshot output Zero-Shot (ChatGPT, Claude, Gemini, DeepSeek)</div>
- 
+  <div class="shot-group">
+    <div class="model-label">ChatGPT</div>
+    <img class="screenshot" src="zeroshot_chatgpt.png" alt="Zero-shot ChatGPT">
+    <div class="model-label">Claude</div>
+    <img class="screenshot" src="zeroshot_claude1.png" alt="Zero-shot Claude parte 1"><img class="screenshot" src="zeroshot_claude2.png" alt="Zero-shot Claude parte 2">
+    <div class="model-label">Gemini</div>
+    <img class="screenshot" src="zeroshot_gemini.png" alt="Zero-shot Gemini">
+    <div class="model-label">DeepSeek</div>
+    <img class="screenshot" src="zeroshot_deepseek1.png" alt="Zero-shot DeepSeek parte 1"><img class="screenshot" src="zeroshot_deepseek2.png" alt="Zero-shot DeepSeek parte 2">
+  </div>
+
   <h3>Tecnica 2 — Few-Shot</h3>
   <p>Si forniscono alcuni esempi di triple RDF prima di chiedere la generazione per un nuovo caso.</p>
   <div class="prompt">"Ecco due esempi di triple RDF per eventi di deepfake [...]. Ora genera triple simili per: un deepfake di Joe Biden diffuso su YouTube che simula un discorso di resa."</div>
-  <div class="shot">⬚ Inserire screenshot output Few-Shot (ChatGPT, Claude, Gemini, DeepSeek)</div>
- 
+  <div class="shot-group">
+    <div class="model-label">ChatGPT</div>
+    <img class="screenshot" src="fewshot_chatgpt.png" alt="Few-shot ChatGPT">
+    <div class="model-label">Claude</div>
+    <img class="screenshot" src="fewshot_claude.png" alt="Few-shot Claude">
+    <div class="model-label">Gemini</div>
+    <img class="screenshot" src="fewshot_gemini.png" alt="Few-shot Gemini">
+    <div class="model-label">DeepSeek</div>
+    <img class="screenshot" src="fewshot_deepseek.png" alt="Few-shot DeepSeek">
+  </div>
+
   <h3>Tecnica 3 — Chain-of-Thought</h3>
   <p>Si chiede al modello di ragionare passo per passo prima di produrre le triple.</p>
   <div class="prompt">"Prima di generare le triple RDF, ragiona passo per passo: 1) identifica le entità, 2) le relazioni, 3) le proprietà rilevanti, 4) genera le triple. Evento: un deepfake di Giorgia Meloni diffuso su Facebook simula dichiarazioni false sulla politica migratoria italiana."</div>
-  <div class="shot">⬚ Inserire screenshot output Chain-of-Thought (ChatGPT, Claude, Gemini, DeepSeek)</div>
+  <div class="shot-group">
+    <div class="model-label">ChatGPT</div>
+    <img class="screenshot" src="cot_chatgpt.png" alt="Chain-of-thought ChatGPT">
+    <div class="model-label">Claude</div>
+    <img class="screenshot" src="cot_claude1.png" alt="Chain-of-thought Claude parte 1"><img class="screenshot" src="cot_claude2.png" alt="Chain-of-thought Claude parte 2"><img class="screenshot" src="cot_claude3.png" alt="Chain-of-thought Claude parte 3"><img class="screenshot" src="cot_claude4.png" alt="Chain-of-thought Claude parte 4">
+    <div class="model-label">Gemini</div>
+    <img class="screenshot" src="cot_gemini1.png" alt="Chain-of-thought Gemini parte 1"><img class="screenshot" src="cot_gemini2.png" alt="Chain-of-thought Gemini parte 2">
+    <div class="model-label">DeepSeek</div>
+    <img class="screenshot" src="cot_deepseek1.png" alt="Chain-of-thought DeepSeek parte 1"><img class="screenshot" src="cot_deepseek2.png" alt="Chain-of-thought DeepSeek parte 2">
+  </div>
 </section>
- 
+
 <section id="confronto">
   <span class="label">06 — Valutazione</span>
   <h2>Confronto tra i modelli</h2>
@@ -390,7 +433,7 @@ LIMIT 10</pre>
   </div>
   <p>Tra le tecniche, il <strong>chain-of-thought</strong> ha prodotto costantemente gli output più ricchi, mentre il <strong>few-shot</strong> si è rivelato il più efficace per standardizzare il formato. Il <strong>zero-shot</strong> ha mostrato la maggiore variabilità tra i modelli.</p>
 </section>
- 
+
 <section id="ontologia">
   <span class="label">07 — Modellazione</span>
   <h2>Ontologia del dominio e triple RDF</h2>
@@ -412,7 +455,7 @@ pd:Deepfake_Biden_TikTok_2024 pd:targetEmotion pd:Fear .
 pd:Deepfake_Biden_TikTok_2024 pd:democraticRiskLevel "High" .
 pd:Deepfake_Biden_TikTok_2024 pd:context pd:USElectionCampaign2024 .</pre>
 </section>
- 
+
 <section id="sfide">
   <span class="label">08 — Riflessione critica</span>
   <h2>Sfide affrontate</h2>
@@ -423,7 +466,7 @@ pd:Deepfake_Biden_TikTok_2024 pd:context pd:USElectionCampaign2024 .</pre>
     <li><strong>Verifica delle triple generate.</strong> Gli output dei modelli sono stati controllati manualmente per garantirne la correttezza sintattica Turtle e la coerenza semantica con il dominio.</li>
   </ul>
 </section>
- 
+
 <section id="conclusioni">
   <span class="label">09 — Conclusioni</span>
   <h2>Cosa abbiamo dimostrato</h2>
@@ -435,12 +478,12 @@ pd:Deepfake_Biden_TikTok_2024 pd:context pd:USElectionCampaign2024 .</pre>
     <li>L'approccio è scalabile ad altri domini in cui i Knowledge Graph presentano gap semantici.</li>
   </ul>
 </section>
- 
+
 <footer>
   <p class="big">Progetto di Metodologie e Tecniche di Simulazione</p>
   <p>Prof.ssa Valentina Presutti · Università di Bologna</p>
   <p style="margin-top:0.6rem;">Giugno 2026</p>
- 
+
   <div class="authors">
     <div class="author">
       <div class="photo">
@@ -455,10 +498,10 @@ pd:Deepfake_Biden_TikTok_2024 pd:context pd:USElectionCampaign2024 .</pre>
       <p class="aname">Michelle Canario</p>
     </div>
   </div>
- 
+
   <p class="love">Made with <span style="color:#e87fa5;">&#9829;</span> by Alessia De Luca e Michelle Canario</p>
   <p style="margin-top:1rem;"><a href="https://github.com/ale19ssia/Deepfake-Knowledge-Graph-Project" target="_blank">Repository su GitHub</a></p>
 </footer>
- 
+
 </body>
 </html>
