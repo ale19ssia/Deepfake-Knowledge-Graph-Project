@@ -361,7 +361,7 @@ WHERE {
   ?concetto rdfs:label ?label .
   FILTER(LANG(?label) = "en")
 }</pre>
-    <img class="screenshot" src="query7a.png" alt="Risultati Query 7a — il concetto dbr:Deepfake esiste in DBpedia"><p class="shot-caption">Query 7a — il concetto di deepfake è presente in DBpedia: il dominio non è del tutto assente.</p>
+    <img class="screenshot" src="query7a.jpg" alt="Risultati Query 7a — il concetto dbr:Deepfake esiste in DBpedia"><p class="shot-caption">Query 7a — il concetto di deepfake è presente in DBpedia: il dominio non è del tutto assente.</p>
 
     <h3>Passo 2 — Ma il legame con i politici è solo un <em>wiki-link</em>, non una relazione semantica</h3>
     <p>Cercando un qualunque collegamento tra <a href="http://dbpedia.org/resource/Joe_Biden" target="_blank">Joe Biden</a> e qualcosa che contenga «deepfake», emerge effettivamente un risultato. Ma la proprietà che li lega è <code>dbo:wikiPageWikiLink</code>: un semplice collegamento ipertestuale tra pagine Wikipedia, non una relazione semantica. Indica solo che l'articolo «Deepfake» cita Biden, non che esista un evento deepfake che lo riguarda.</p>
@@ -379,7 +379,7 @@ WHERE {
     BIND("X -> Biden" AS ?direzione)
   }
 }</pre>
-    <img class="screenshot" src="query7b.png" alt="Risultati Query 7b — il collegamento avviene solo tramite dbo:wikiPageWikiLink"><p class="shot-caption">Query 7b — l'unico legame è <code>dbo:wikiPageWikiLink</code>: un link ipertestuale, non una relazione semantica.</p>
+    <img class="screenshot" src="query7b.jpg" alt="Risultati Query 7b — il collegamento avviene solo tramite dbo:wikiPageWikiLink"><p class="shot-caption">Query 7b — l'unico legame è <code>dbo:wikiPageWikiLink</code>: un link ipertestuale, non una relazione semantica.</p>
 
     <h3>Passo 3 — Esclusi i wiki-link, non resta nulla: <code>ASK</code> → <strong>false</strong></h3>
     <p>Escludendo questi collegamenti puramente strutturali di Wikipedia (<code>wikiPageWikiLink</code> e simili), la query <code>ASK</code> restituisce <strong>false</strong>: non esiste alcuna tripla semantica che colleghi Biden a un deepfake. Lo stesso vale per Trump e Meloni.</p>
@@ -397,7 +397,7 @@ ASK {
     FILTER(?p NOT IN (dbo:wikiPageWikiLink, dbo:wikiPageRedirects, dbo:wikiPageDisambiguates))
   }
 }</pre>
-    <img class="screenshot" src="query7c.png" alt="Risultati Query 7c — ASK restituisce false"><p class="shot-caption">Query 7c — nessuna relazione semantica tra Biden e un deepfake: la risposta è <strong>false</strong>.</p>
+    <img class="screenshot" src="query7c.jpg" alt="Risultati Query 7c — ASK restituisce false"><p class="shot-caption">Query 7c — nessuna relazione semantica tra Biden e un deepfake: la risposta è <strong>false</strong>.</p>
 
     <p>Qui sta il gap semantico: DBpedia conosce i tre politici come entità strutturate e conosce il deepfake come concetto, ma <strong>non modella gli eventi deepfake</strong> (manca una classe <code>DeepfakeEvent</code>), non ne contiene istanze e non collega i politici agli episodi con proprietà tipizzate (tecnica, emozione bersaglio, piattaforma, rischio democratico). L'informazione «un deepfake di Biden diffuso su TikTok nel 2024 per indurre paura negli elettori» non è né rappresentabile né interrogabile. È questa lacuna che il progetto colma generando nuove triple RDF tramite i Large Language Models.</p>
   </div>
@@ -509,6 +509,7 @@ pd:Deepfake_Biden_TikTok_2024 pd:usedTechnique pd:FaceSwap .
 pd:Deepfake_Biden_TikTok_2024 pd:targetEmotion pd:Fear .
 pd:Deepfake_Biden_TikTok_2024 pd:democraticRiskLevel "High" .
 pd:Deepfake_Biden_TikTok_2024 pd:context pd:USElectionCampaign2024 .</pre>
+  <p>L'ontologia completa è formalizzata in Turtle ed è disponibile come file scaricabile: <a href="deepfake-ontology.ttl" target="_blank">deepfake-ontology.ttl</a>. Il file definisce le classi, le proprietà con <code>rdfs:domain</code> e <code>rdfs:range</code>, le gerarchie con <code>rdfs:subClassOf</code> (ad esempio <code>pd:Politician rdfs:subClassOf dbo:Politician</code>) e collega le entità a DBpedia tramite <code>owl:sameAs</code>. Può essere importato direttamente in Protégé per la visualizzazione e il reasoning automatico.</p>
 </section>
 
 <section id="sfide">

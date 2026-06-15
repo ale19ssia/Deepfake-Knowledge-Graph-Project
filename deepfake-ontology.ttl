@@ -1,0 +1,211 @@
+## ==========================================================================
+## Ontologia del dominio: Deepfake Politici
+## Namespace: https://ale19ssia.github.io/Deepfake-Knowledge-Graph-Project/ontology#
+## Autori: Alessia De Luca, Michelle Canario
+## Corso: Metodi Semantici per la Trasformazione Digitale — Prof.ssa V. Presutti
+## Università di Bologna — GEPID — Giugno 2026
+## ==========================================================================
+
+@prefix pd:    <https://ale19ssia.github.io/Deepfake-Knowledge-Graph-Project/ontology#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix dbo:   <http://dbpedia.org/ontology/> .
+@prefix dbr:   <http://dbpedia.org/resource/> .
+@prefix schema: <http://schema.org/> .
+
+
+## ==========================================================================
+## T-BOX — Classi
+## ==========================================================================
+
+pd:DeepfakeEvent a rdfs:Class ;
+    rdfs:label "Deepfake Event"@en ;
+    rdfs:label "Evento Deepfake"@it ;
+    rdfs:comment "Un evento di creazione e/o diffusione di contenuto deepfake in ambito politico."@it ;
+    rdfs:subClassOf schema:Event .
+
+pd:Politician a rdfs:Class ;
+    rdfs:label "Politician"@en ;
+    rdfs:label "Politico"@it ;
+    rdfs:comment "Un politico coinvolto in un evento deepfake."@it ;
+    rdfs:subClassOf dbo:Politician .
+
+pd:Platform a rdfs:Class ;
+    rdfs:label "Platform"@en ;
+    rdfs:label "Piattaforma"@it ;
+    rdfs:comment "Una piattaforma digitale attraverso cui un deepfake viene diffuso."@it ;
+    rdfs:subClassOf schema:WebSite .
+
+pd:ManipulationTechnique a rdfs:Class ;
+    rdfs:label "Manipulation Technique"@en ;
+    rdfs:label "Tecnica di Manipolazione"@it ;
+    rdfs:comment "La tecnica di intelligenza artificiale utilizzata per generare il deepfake."@it .
+
+pd:Emotion a rdfs:Class ;
+    rdfs:label "Emotion"@en ;
+    rdfs:label "Emozione"@it ;
+    rdfs:comment "L'emozione che il deepfake intende suscitare nel pubblico."@it .
+
+pd:PoliticalContext a rdfs:Class ;
+    rdfs:label "Political Context"@en ;
+    rdfs:label "Contesto Politico"@it ;
+    rdfs:comment "Il contesto politico in cui l'evento deepfake si inserisce."@it .
+
+
+## ==========================================================================
+## T-BOX — Object Properties (relazioni tra risorse)
+## ==========================================================================
+
+pd:involves a rdf:Property ;
+    rdfs:label "involves"@en ;
+    rdfs:label "coinvolge"@it ;
+    rdfs:comment "Collega un evento deepfake al politico il cui volto o voce viene simulato."@it ;
+    rdfs:domain pd:DeepfakeEvent ;
+    rdfs:range pd:Politician .
+
+pd:spreadThrough a rdf:Property ;
+    rdfs:label "spread through"@en ;
+    rdfs:label "diffuso tramite"@it ;
+    rdfs:comment "Collega un evento deepfake alla piattaforma di diffusione."@it ;
+    rdfs:domain pd:DeepfakeEvent ;
+    rdfs:range pd:Platform .
+
+pd:usedTechnique a rdf:Property ;
+    rdfs:label "used technique"@en ;
+    rdfs:label "tecnica utilizzata"@it ;
+    rdfs:comment "Collega un evento deepfake alla tecnica di manipolazione impiegata."@it ;
+    rdfs:domain pd:DeepfakeEvent ;
+    rdfs:range pd:ManipulationTechnique .
+
+pd:targetEmotion a rdf:Property ;
+    rdfs:label "target emotion"@en ;
+    rdfs:label "emozione bersaglio"@it ;
+    rdfs:comment "Collega un evento deepfake all'emozione che intende suscitare."@it ;
+    rdfs:domain pd:DeepfakeEvent ;
+    rdfs:range pd:Emotion .
+
+pd:context a rdf:Property ;
+    rdfs:label "context"@en ;
+    rdfs:label "contesto"@it ;
+    rdfs:comment "Collega un evento deepfake al contesto politico in cui si inserisce."@it ;
+    rdfs:domain pd:DeepfakeEvent ;
+    rdfs:range pd:PoliticalContext .
+
+
+## ==========================================================================
+## T-BOX — Data Property (valore letterale)
+## ==========================================================================
+
+pd:democraticRiskLevel a rdf:Property ;
+    rdfs:label "democratic risk level"@en ;
+    rdfs:label "livello di rischio democratico"@it ;
+    rdfs:comment "Indica il livello di rischio per la democrazia: High, Medium o Low."@it ;
+    rdfs:domain pd:DeepfakeEvent ;
+    rdfs:range xsd:string .
+
+
+## ==========================================================================
+## A-BOX — Istanze: piattaforme, tecniche, emozioni, contesti
+## ==========================================================================
+
+## Piattaforme
+pd:TikTok a pd:Platform ;
+    rdfs:label "TikTok"@en ;
+    owl:sameAs dbr:TikTok .
+
+pd:YouTube a pd:Platform ;
+    rdfs:label "YouTube"@en ;
+    owl:sameAs dbr:YouTube .
+
+pd:Facebook a pd:Platform ;
+    rdfs:label "Facebook"@en ;
+    owl:sameAs dbr:Facebook .
+
+pd:Instagram a pd:Platform ;
+    rdfs:label "Instagram"@en ;
+    owl:sameAs dbr:Instagram .
+
+## Tecniche di manipolazione
+pd:FaceSwap a pd:ManipulationTechnique ;
+    rdfs:label "Face Swap"@en ;
+    rdfs:comment "Sostituzione del volto di una persona con quello di un'altra tramite IA."@it .
+
+pd:VoiceCloning a pd:ManipulationTechnique ;
+    rdfs:label "Voice Cloning"@en ;
+    rdfs:comment "Sintesi artificiale della voce di una persona reale."@it .
+
+pd:LipSync a pd:ManipulationTechnique ;
+    rdfs:label "Lip Sync"@en ;
+    rdfs:comment "Sincronizzazione artificiale del movimento labiale con un audio manipolato."@it .
+
+## Emozioni
+pd:Fear a pd:Emotion ;
+    rdfs:label "Fear"@en ;
+    rdfs:label "Paura"@it .
+
+pd:Anger a pd:Emotion ;
+    rdfs:label "Anger"@en ;
+    rdfs:label "Rabbia"@it .
+
+pd:Distrust a pd:Emotion ;
+    rdfs:label "Distrust"@en ;
+    rdfs:label "Sfiducia"@it .
+
+## Contesti politici
+pd:USElectionCampaign2024 a pd:PoliticalContext ;
+    rdfs:label "US Presidential Election Campaign 2024"@en ;
+    rdfs:label "Campagna elettorale presidenziale USA 2024"@it ;
+    owl:sameAs dbr:2024_United_States_presidential_election .
+
+pd:ItalianMigrationPolicy a pd:PoliticalContext ;
+    rdfs:label "Italian Migration Policy Debate"@en ;
+    rdfs:label "Dibattito sulla politica migratoria italiana"@it .
+
+
+## ==========================================================================
+## A-BOX — Istanze: politici (collegati a DBpedia tramite owl:sameAs)
+## ==========================================================================
+
+pd:Joe_Biden a pd:Politician ;
+    rdfs:label "Joe Biden"@en ;
+    owl:sameAs dbr:Joe_Biden .
+
+pd:Donald_Trump a pd:Politician ;
+    rdfs:label "Donald Trump"@en ;
+    owl:sameAs dbr:Donald_Trump .
+
+pd:Giorgia_Meloni a pd:Politician ;
+    rdfs:label "Giorgia Meloni"@en ;
+    owl:sameAs dbr:Giorgia_Meloni .
+
+
+## ==========================================================================
+## A-BOX — Caso studio: deepfake di Biden su TikTok (2024)
+## ==========================================================================
+
+pd:Deepfake_Biden_TikTok_2024 a pd:DeepfakeEvent ;
+    rdfs:label "Biden Deepfake - TikTok 2024"@en ;
+    rdfs:label "Deepfake di Biden su TikTok 2024"@it ;
+    pd:involves pd:Joe_Biden ;
+    pd:spreadThrough pd:TikTok ;
+    pd:usedTechnique pd:FaceSwap ;
+    pd:targetEmotion pd:Fear ;
+    pd:context pd:USElectionCampaign2024 ;
+    pd:democraticRiskLevel "High" .
+
+
+## ==========================================================================
+## A-BOX — Evento aggiuntivo: deepfake di Meloni su Facebook
+## ==========================================================================
+
+pd:Deepfake_Meloni_Facebook_2024 a pd:DeepfakeEvent ;
+    rdfs:label "Meloni Deepfake - Facebook 2024"@en ;
+    rdfs:label "Deepfake di Meloni su Facebook 2024"@it ;
+    pd:involves pd:Giorgia_Meloni ;
+    pd:spreadThrough pd:Facebook ;
+    pd:usedTechnique pd:LipSync ;
+    pd:targetEmotion pd:Anger ;
+    pd:context pd:ItalianMigrationPolicy ;
+    pd:democraticRiskLevel "High" .
