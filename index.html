@@ -129,6 +129,8 @@
     }
     .gap h3 { color: var(--accent-soft); margin-top: 0; }
     .gap .shot { background: #2a2520; border-color: var(--accent-soft); color: var(--accent-soft); }
+    .gap .shot-caption { color: #c9a8b6; }
+    .gap code { color: var(--accent-soft); }
     .gap a { color: var(--accent-soft); }
 
     /* PROMPT BOX */
@@ -345,26 +347,66 @@ ORDER BY ?label</pre>
 <section id="gap">
   <span class="label">04 — Il cuore del progetto</span>
   <h2>Il gap semantico, dimostrato</h2>
-  <div class="gap">
-    <h3>Query 7 — Ricerca "deepfake" in DBpedia → zero risultati</h3>
-    <pre>PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+  <p>DBpedia non ignora del tutto il fenomeno: il concetto generico di deepfake esiste come risorsa. Ciò che manca è la rappresentazione a livello di <em>evento</em> — i singoli episodi — e qualsiasi relazione semantica <em>tipizzata</em> tra un politico e un deepfake che lo riguarda. Lo dimostriamo in tre passi, affinando progressivamente la ricerca con le keyword <code>VALUES</code>, <code>FILTER</code> e <code>ASK</code>.</p>
 
-SELECT DISTINCT ?x ?label
+  <div class="gap">
+    <h3>Passo 1 — Il concetto di deepfake <em>esiste</em> in DBpedia</h3>
+    <p>Partiamo da una verifica onesta: DBpedia conosce il deepfake come concetto generale. La risorsa <a href="http://dbpedia.org/resource/Deepfake" target="_blank">dbr:Deepfake</a> esiste, insieme alle sue varianti (<code>dbr:Deepfake_pornography</code>, <code>dbr:Audio_deepfake</code>).</p>
+    <pre>PREFIX dbr:  &lt;http://dbpedia.org/resource/&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+
+SELECT ?concetto ?label
 WHERE {
-  ?x rdfs:label ?label .
+  VALUES ?concetto { dbr:Deepfake dbr:Deepfake_pornography dbr:Audio_deepfake }
+  ?concetto rdfs:label ?label .
   FILTER(LANG(?label) = "en")
-  FILTER(CONTAINS(LCASE(?label), "deepfake"))
-}
-LIMIT 10</pre>
-    <p>La query restituisce <strong>zero risultati</strong>. DBpedia conosce <a href="http://dbpedia.org/resource/Joe_Biden" target="_blank">Joe Biden</a>, <a href="http://dbpedia.org/resource/Donald_Trump" target="_blank">Donald Trump</a> e <a href="http://dbpedia.org/resource/Giorgia_Meloni" target="_blank">Giorgia Meloni</a> come entità politiche strutturate, ma non contiene alcuna rappresentazione semantica degli eventi deepfake che li riguardano. È esattamente questa mancanza che il progetto si propone di colmare attraverso i Large Language Models.</p>
-    <img class="screenshot" src="query7.png" alt="Risultati Query 7 - zero risultati"><p class="shot-caption">Risultati della Query 7 — zero risultati: il gap semantico è dimostrato</p>
+}</pre>
+    <img class="screenshot" src="query7a.png" alt="Risultati Query 7a — il concetto dbr:Deepfake esiste in DBpedia"><p class="shot-caption">Query 7a — il concetto di deepfake è presente in DBpedia: il dominio non è del tutto assente.</p>
+
+    <h3>Passo 2 — Ma il legame con i politici è solo un <em>wiki-link</em>, non una relazione semantica</h3>
+    <p>Cercando un qualunque collegamento tra <a href="http://dbpedia.org/resource/Joe_Biden" target="_blank">Joe Biden</a> e qualcosa che contenga «deepfake», emerge effettivamente un risultato. Ma la proprietà che li lega è <code>dbo:wikiPageWikiLink</code>: un semplice collegamento ipertestuale tra pagine Wikipedia, non una relazione semantica. Indica solo che l'articolo «Deepfake» cita Biden, non che esista un evento deepfake che lo riguarda.</p>
+    <pre>PREFIX dbr: &lt;http://dbpedia.org/resource/&gt;
+
+SELECT DISTINCT ?direzione ?p ?altra
+WHERE {
+  {
+    dbr:Joe_Biden ?p ?altra .
+    FILTER(CONTAINS(LCASE(STR(?altra)), "deepfake"))
+    BIND("Biden -> X" AS ?direzione)
+  } UNION {
+    ?altra ?p dbr:Joe_Biden .
+    FILTER(CONTAINS(LCASE(STR(?altra)), "deepfake"))
+    BIND("X -> Biden" AS ?direzione)
+  }
+}</pre>
+    <img class="screenshot" src="query7b.png" alt="Risultati Query 7b — il collegamento avviene solo tramite dbo:wikiPageWikiLink"><p class="shot-caption">Query 7b — l'unico legame è <code>dbo:wikiPageWikiLink</code>: un link ipertestuale, non una relazione semantica.</p>
+
+    <h3>Passo 3 — Esclusi i wiki-link, non resta nulla: <code>ASK</code> → <strong>false</strong></h3>
+    <p>Escludendo questi collegamenti puramente strutturali di Wikipedia (<code>wikiPageWikiLink</code> e simili), la query <code>ASK</code> restituisce <strong>false</strong>: non esiste alcuna tripla semantica che colleghi Biden a un deepfake. Lo stesso vale per Trump e Meloni.</p>
+    <pre>PREFIX dbr: &lt;http://dbpedia.org/resource/&gt;
+PREFIX dbo: &lt;http://dbpedia.org/ontology/&gt;
+
+ASK {
+  {
+    dbr:Joe_Biden ?p ?o .
+    FILTER(CONTAINS(LCASE(STR(?o)), "deepfake"))
+    FILTER(?p NOT IN (dbo:wikiPageWikiLink, dbo:wikiPageRedirects, dbo:wikiPageDisambiguates))
+  } UNION {
+    ?s ?p dbr:Joe_Biden .
+    FILTER(CONTAINS(LCASE(STR(?s)), "deepfake"))
+    FILTER(?p NOT IN (dbo:wikiPageWikiLink, dbo:wikiPageRedirects, dbo:wikiPageDisambiguates))
+  }
+}</pre>
+    <img class="screenshot" src="query7c.png" alt="Risultati Query 7c — ASK restituisce false"><p class="shot-caption">Query 7c — nessuna relazione semantica tra Biden e un deepfake: la risposta è <strong>false</strong>.</p>
+
+    <p>Qui sta il gap semantico: DBpedia conosce i tre politici come entità strutturate e conosce il deepfake come concetto, ma <strong>non modella gli eventi deepfake</strong> (manca una classe <code>DeepfakeEvent</code>), non ne contiene istanze e non collega i politici agli episodi con proprietà tipizzate (tecnica, emozione bersaglio, piattaforma, rischio democratico). L'informazione «un deepfake di Biden diffuso su TikTok nel 2024 per indurre paura negli elettori» non è né rappresentabile né interrogabile. È questa lacuna che il progetto colma generando nuove triple RDF tramite i Large Language Models.</p>
   </div>
 </section>
 
 <section id="llm">
   <span class="label">05 — Arricchimento</span>
   <h2>Tre tecniche di prompting, quattro modelli</h2>
-  <p>Per generare nuove triple RDF che colmino il gap, sono state applicate tre tecniche di prompting a quattro modelli linguistici: <a href="https://chat.openai.com" target="_blank">ChatGPT</a>, <a href="https://claude.ai" target="_blank">Claude</a>, <a href="https://gemini.google.com" target="_blank">Gemini</a> e <a href="https://chat.deepseek.com" target="_blank">DeepSeek</a>. Per ciascuna tecnica è stato usato un evento di deepfake diverso, per dimostrare la generalizzabilità dell'approccio.</p>
+  <p>Per generare nuove triple RDF che colmino il gap, sono state applicate tre tecniche di prompting a quattro modelli linguistici: <a href="https://chat.openai.com" target="_blank">ChatGPT</a>, <a href="https://claude.ai" target="_blank">Claude</a>, <a href="https://gemini.google.com" target="_blank">Gemini</a> e <a href="https://chat.deepseek.com" target="_blank">DeepSeek</a>. Per ciascuna tecnica è stato usato un evento di deepfake diverso (campagna elettorale USA, discorso di resa, politica migratoria italiana), così da mostrare la generalizzabilità dell'approccio su scenari differenti. Di conseguenza il confronto tra tecniche è di natura <em>qualitativa</em> e non un esperimento controllato a parità di input: questa scelta, e i suoi limiti, sono discussi nella sezione <a href="#sfide">Sfide</a>.</p>
 
   <h3>Tecnica 1 — Zero-Shot</h3>
   <p>Si chiede direttamente al modello di generare le triple, senza fornire esempi.</p>
@@ -382,7 +424,16 @@ LIMIT 10</pre>
 
   <h3>Tecnica 2 — Few-Shot</h3>
   <p>Si forniscono alcuni esempi di triple RDF prima di chiedere la generazione per un nuovo caso.</p>
-  <div class="prompt">"Ecco due esempi di triple RDF per eventi di deepfake [...]. Ora genera triple simili per: un deepfake di Joe Biden diffuso su YouTube che simula un discorso di resa."</div>
+  <div class="prompt">"Ecco due esempi di triple RDF per eventi di deepfake:<br><br>
+  ESEMPIO 1:<br>
+  pd:Deepfake_Trump rdf:type pd:DeepfakeEvent .<br>
+  pd:Deepfake_Trump pd:involves dbr:Donald_Trump .<br>
+  pd:Deepfake_Trump pd:targetEmotion pd:Anger .<br><br>
+  ESEMPIO 2:<br>
+  pd:Deepfake_Meloni rdf:type pd:DeepfakeEvent .<br>
+  pd:Deepfake_Meloni pd:spreadThrough pd:Instagram .<br>
+  pd:Deepfake_Meloni pd:democraticRiskLevel &quot;High&quot; .<br><br>
+  Ora genera triple simili per: un deepfake di Joe Biden diffuso su YouTube che simula un discorso di resa."</div>
   <div class="shot-group">
     <div class="model-label">ChatGPT</div>
     <img class="screenshot" src="fewshot_chatgpt.png" alt="Few-shot ChatGPT">
@@ -437,7 +488,7 @@ LIMIT 10</pre>
 <section id="ontologia">
   <span class="label">07 — Modellazione</span>
   <h2>Ontologia del dominio e triple RDF</h2>
-  <p>Per supportare la rappresentazione semantica degli eventi di deepfake politico è stata definita una piccola ontologia di dominio.</p>
+  <p>Per supportare la rappresentazione semantica degli eventi di deepfake politico è stata definita una piccola ontologia di dominio. Le entità create appartengono al namespace <code>pd:</code>, definito sotto.</p>
   <pre>DeepfakeEvent
 │
 ├── pd:involves            →  Politician
@@ -447,7 +498,11 @@ LIMIT 10</pre>
 ├── pd:context             →  PoliticalContext
 └── pd:democraticRiskLevel →  "High" / "Medium" / "Low"</pre>
   <h3>Triple RDF generate per il caso studio</h3>
-  <pre>pd:Deepfake_Biden_TikTok_2024 rdf:type pd:DeepfakeEvent .
+  <pre>@prefix pd:  &lt;https://ale19ssia.github.io/Deepfake-Knowledge-Graph-Project/ontology#&gt; .
+@prefix dbr: &lt;http://dbpedia.org/resource/&gt; .
+@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+
+pd:Deepfake_Biden_TikTok_2024 rdf:type pd:DeepfakeEvent .
 pd:Deepfake_Biden_TikTok_2024 pd:involves dbr:Joe_Biden .
 pd:Deepfake_Biden_TikTok_2024 pd:spreadThrough pd:TikTok .
 pd:Deepfake_Biden_TikTok_2024 pd:usedTechnique pd:FaceSwap .
@@ -461,8 +516,10 @@ pd:Deepfake_Biden_TikTok_2024 pd:context pd:USElectionCampaign2024 .</pre>
   <h2>Sfide affrontate</h2>
   <ul class="clean">
     <li><strong>Ambiguità delle entità.</strong> Le ricerche con CONTAINS restituivano parenti e omonimi (Arianna Meloni, Beau Biden). Risolta con REGEX e pattern di corrispondenza esatta.</li>
-    <li><strong>Assenza del dominio in DBpedia.</strong> Nessun evento deepfake era rappresentato: questo ha richiesto la definizione di un'ontologia di dominio ex novo.</li>
+    <li><strong>Distinguere il legame strutturale da quello semantico.</strong> Una prima ricerca generica sembrava collegare i politici al deepfake, ma il legame era solo un <code>wikiPageWikiLink</code> (collegamento ipertestuale di Wikipedia). Abbiamo dovuto escludere queste proprietà strutturali per dimostrare la reale assenza di relazioni semantiche e definire con precisione il gap.</li>
+    <li><strong>Assenza del dominio in DBpedia.</strong> Nessun evento deepfake era rappresentato a livello semantico: questo ha richiesto la definizione di un'ontologia di dominio ex novo, con un proprio namespace.</li>
     <li><strong>Variabilità degli output LLM.</strong> Ogni modello generava prefissi e strutture diverse. Il few-shot prompting è servito a standardizzare il formato.</li>
+    <li><strong>Confronto qualitativo, non controllato.</strong> Per ogni tecnica è stato usato un evento diverso, così da mostrarne la generalizzabilità su scenari realistici. Questo però rende il confronto tra tecniche qualitativo: le differenze osservate sono coerenti con la letteratura sul prompt engineering, ma non isolano in modo controllato l'effetto della singola tecnica, perché l'evento varia insieme alla tecnica.</li>
     <li><strong>Verifica delle triple generate.</strong> Gli output dei modelli sono stati controllati manualmente per garantirne la correttezza sintattica Turtle e la coerenza semantica con il dominio.</li>
   </ul>
 </section>
