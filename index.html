@@ -487,16 +487,28 @@ ASK {
 
 <section id="ontologia">
   <span class="label">07 — Modellazione</span>
-  <h2>Ontologia del dominio e triple RDF</h2>
-  <p>Per supportare la rappresentazione semantica degli eventi di deepfake politico è stata definita una piccola ontologia di dominio. Le entità create appartengono al namespace <code>pd:</code>, definito sotto.</p>
-  <pre>DeepfakeEvent
-│
-├── pd:involves            →  Politician
-├── pd:spreadThrough       →  Platform
-├── pd:usedTechnique       →  ManipulationTechnique
-├── pd:targetEmotion       →  Emotion
-├── pd:context             →  PoliticalContext
-└── pd:democraticRiskLevel →  "High" / "Medium" / "Low"</pre>
+  <h2>Estensione ontologica in Protégé</h2>
+  <p>A seguito dell'analisi di DBpedia e della dimostrazione del gap semantico, è emersa la necessità di <strong>estendere il vocabolario esistente</strong> per rappresentare gli eventi di deepfake politico, non modellati nel Knowledge Graph di riferimento. Anziché costruire un modello isolato, è stata progettata in <a href="https://protege.stanford.edu" target="_blank">Protégé</a> un'<strong>estensione locale e conservativa</strong> di DBpedia, identificata dal namespace <code>pd:</code> (<code>https://ale19ssia.github.io/Deepfake-Knowledge-Graph-Project/ontology#</code>) e fondata sul riuso dei concetti già disponibili.</p>
+  <p>L'estensione segue un approccio incrementale volto a massimizzare l'interoperabilità con il modello esistente: i concetti di DBpedia vengono riutilizzati ove possibile, e nuovi termini <code>pd:</code> sono introdotti <em>solo</em> dove il vocabolario di riferimento risulta insufficiente — esattamente il caso degli eventi deepfake.</p>
+
+  <h3>Gerarchia delle classi</h3>
+  <p>La classe centrale è <code>pd:DeepfakeEvent</code>, che rappresenta il singolo episodio mancante in DBpedia. La classe <code>pd:Politician</code> è definita come <strong>sottoclasse di <code>dbo:Politician</code></strong>, così da agganciare l'estensione al vocabolario di DBpedia e riutilizzarne le istanze (es. <code>dbr:Joe_Biden</code>). A queste si affiancano le classi di supporto <code>pd:Platform</code>, <code>pd:ManipulationTechnique</code>, <code>pd:Emotion</code>, <code>pd:PoliticalContext</code> e <code>pd:DemocraticRiskLevel</code>, ciascuna modellata come vocabolario controllato di istanze (TikTok, FaceSwap, Fear, ...).</p>
+
+  <h3>Proprietà: object e datatype</h3>
+  <p>Seguendo lo stesso principio di riuso, le proprietà sono distinte tra <strong>object property</strong> (che collegano l'evento ad altre entità) e <strong>datatype property</strong> (che esprimono valori letterali), tutte dotate di dominio e range espliciti:</p>
+  <ul class="clean">
+    <li><code>pd:involves</code> → <code>dbo:Politician</code> — il politico raffigurato; il range è agganciato a DBpedia, così la proprietà accetta direttamente le risorse <code>dbr:</code>.</li>
+    <li><code>pd:spreadThrough</code> → <code>pd:Platform</code> — la piattaforma di diffusione.</li>
+    <li><code>pd:usedTechnique</code> → <code>pd:ManipulationTechnique</code> — la tecnica di manipolazione.</li>
+    <li><code>pd:targetEmotion</code> → <code>pd:Emotion</code> — l'emozione bersaglio.</li>
+    <li><code>pd:context</code> → <code>pd:PoliticalContext</code> — il contesto socio-politico.</li>
+    <li><code>pd:democraticRiskLevel</code> → <code>xsd:string</code> (datatype property) — il livello di rischio democratico ("High"/"Medium"/"Low").</li>
+  </ul>
+  <p>Per consentire la navigazione del grafo nei due sensi è stata inoltre definita la <strong>proprietà inversa</strong> <code>pd:isTargetOf</code> (inverso di <code>pd:involves</code>): da un politico è così possibile risalire a tutti i deepfake che lo riguardano. Con un reasoner attivo (HermiT), asserire <code>pd:involves</code> popola automaticamente anche <code>pd:isTargetOf</code> — un esempio concreto di inferenza ottenuta dall'estensione.</p>
+
+  <h3>Struttura dell'ontologia</h3>
+  <img class="screenshot" src="ontology_protege.png" alt="Struttura dell'ontologia pd: in Protégé"><p class="shot-caption">Struttura dell'ontologia locale <code>pd:</code> e relazioni con il vocabolario DBpedia, esportata da Protégé.</p>
+
   <h3>Triple RDF generate per il caso studio</h3>
   <pre>@prefix pd:  &lt;https://ale19ssia.github.io/Deepfake-Knowledge-Graph-Project/ontology#&gt; .
 @prefix dbr: &lt;http://dbpedia.org/resource/&gt; .
@@ -509,7 +521,7 @@ pd:Deepfake_Biden_TikTok_2024 pd:usedTechnique pd:FaceSwap .
 pd:Deepfake_Biden_TikTok_2024 pd:targetEmotion pd:Fear .
 pd:Deepfake_Biden_TikTok_2024 pd:democraticRiskLevel "High" .
 pd:Deepfake_Biden_TikTok_2024 pd:context pd:USElectionCampaign2024 .</pre>
-  <p>L'ontologia completa è formalizzata in Turtle ed è disponibile come file scaricabile: <a href="deepfake-ontology.ttl" target="_blank">deepfake-ontology.ttl</a>. Il file definisce le classi, le proprietà con <code>rdfs:domain</code> e <code>rdfs:range</code>, le gerarchie con <code>rdfs:subClassOf</code> (ad esempio <code>pd:Politician rdfs:subClassOf dbo:Politician</code>) e collega le entità a DBpedia tramite <code>owl:sameAs</code>. Può essere importato direttamente in Protégé per la visualizzazione e il reasoning automatico.</p>
+  <p>L'ontologia completa è formalizzata in Turtle ed è disponibile come file scaricabile: <a href="deepfake-ontology.ttl" target="_blank">deepfake-ontology.ttl</a>. Il file dichiara classi e proprietà con <code>rdfs:label</code> e <code>rdfs:comment</code>, definisce dominio e range, la gerarchia con <code>rdfs:subClassOf</code> (<code>pd:Politician rdfs:subClassOf dbo:Politician</code>), la coppia di proprietà inverse e collega le entità a DBpedia tramite <code>owl:sameAs</code>. Può essere importato in Protégé per la visualizzazione e il reasoning automatico.</p>
 </section>
 
 <section id="sfide">
