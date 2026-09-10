@@ -536,9 +536,9 @@ pd:Deepfake_Biden_TikTok_2024 pd:context pd:USElectionCampaign2024 .</pre>
 <h3>I tre casi scelti</h3>
 <p>Sono stati selezionati tre casi reali statunitensi del 2024, ciascuno con una fonte di verifica identificabile e documentata:</p>
 <ul class="clean">
-<li><strong>Robocall deepfake di Biden</strong> — audio clonato diffuso telefonicamente prima delle primarie del New Hampshire (gennaio 2024), autore identificato e multato dalla FCC.</li>
-<li><strong>Video deepfake di Harris amplificato da Musk</strong> — audio manipolato su X, creato da un account satirico e reso virale senza etichetta di parodia (luglio 2024).</li>
-<li><strong>Falso endorsement di Taylor Swift a Trump</strong> — immagini generate con IA diffuse su Truth Social e X (agosto 2024).</li>
+<li><strong>Robocall deepfake di Biden</strong> — audio clonato diffuso telefonicamente prima delle <a href="http://dbpedia.org/resource/2024_New_Hampshire_Democratic_presidential_primary" target="_blank">primarie del New Hampshire</a> (gennaio 2024), autore identificato e multato dalla <a href="http://dbpedia.org/resource/Federal_Communications_Commission" target="_blank">FCC</a>.</li>
+<li><strong>Video deepfake di Harris amplificato da <a href="http://dbpedia.org/resource/Elon_Musk" target="_blank">Musk</a></strong> — audio manipolato su <a href="http://dbpedia.org/resource/Twitter" target="_blank">X</a>, creato da un account satirico e reso virale senza etichetta di parodia (luglio 2024).</li>
+<li><strong>Falso endorsement di <a href="http://dbpedia.org/resource/Taylor_Swift" target="_blank">Taylor Swift</a> a <a href="http://dbpedia.org/resource/Donald_Trump" target="_blank">Trump</a></strong> — immagini generate con IA diffuse su <a href="http://dbpedia.org/resource/Truth_Social" target="_blank">Truth Social</a> e X (agosto 2024).</li>
 </ul>
 
 <h3>Estensione dell'ontologia: fonte, credibilità, tracciabilità</h3>
@@ -681,7 +681,8 @@ Ora genera triple simili per: un video deepfake di Kamala Harris, con audio clon
 <img class="screenshot" src="integrazione_cot_gemini1.png" alt="Chain-of-thought Gemini parte 1 — caso Swift Trump"><img class="screenshot" src="integrazione_cot_gemini2.png" alt="Chain-of-thought Gemini parte 2 — caso Swift Trump">
 </div>
 
-<p>[Dopo aver fatto gli screenshot, scrivi 2-3 frasi di confronto: quale modello ha usato meglio le nuove proprietà createdBy/verifiedBy? Qualcuno ha inventato dati non presenti nel prompt? La differenza tra le tecniche è coerente con quanto osservato nella sezione #confronto originale?]</p>
+<p>Un pattern netto emerge dal confronto: solo il <strong>few-shot</strong> — l'unica tecnica in cui gli esempi mostravano già i nomi reali delle proprietà (<code>pd:createdBy</code>, <code>pd:amplifiedBy</code>, <code>pd:verificationStatus</code>) — porta i modelli a riusare correttamente il vocabolario dell'ontologia. In <strong>zero-shot</strong> e <strong>chain-of-thought</strong>, senza esempi concreti da imitare, tutti e tre i modelli inventano un proprio vocabolario plausibile ma incompatibile con <code>pd:</code>: ChatGPT dichiara esplicitamente di non essere riuscito a recuperare l'ontologia dal sito e ne genera una ex novo, mentre Gemini nel caso Swift/Trump costruisce un namespace completamente estraneo al progetto (<code>example.org/politicaldisinfo#</code>). Questo conferma, con un caso concreto, l'osservazione già fatta nella sezione <a href="#confronto">Confronto</a> originale: il few-shot resta il più efficace per <em>standardizzare</em> l'output su uno schema esistente.</p>
+<p>Sul piano della qualità semantica, il <strong>chain-of-thought</strong> resta il più ricco: Claude propone da sé una soluzione al gap su <code>pd:involves</code> (una sottoclasse <code>pd:PublicFigure</code> per rappresentare Taylor Swift), mentre Gemini reifica la falsa affermazione come istanza a sé stante (<code>pd:Claim_SwiftEndorsesTrump</code>), un pattern che l'ontologia attuale non prevede ma che si allinea bene a <code>schema:ClaimReview</code>. Sono stati osservati anche errori di dominio ricorrenti — più modelli assegnano <code>credibilityLevel</code> al contenuto sintetico invece che alla fonte che lo verifica — segno che il nome della proprietà da solo non basta a comunicare a un LLM la semantica esatta che le sta dietro.</p>
 
 <div class="gap">
 <h3>Gap identificati e proposte di estensione</h3>
