@@ -635,22 +635,53 @@ WHERE {
 <p class="shot-caption">Risultati della Query I3 — il caso Swift/Trump non ha un'emozione bersaglio: il suo obiettivo persuasivo, il falso endorsement, non è catturato dalla classe <code>pd:Emotion</code> attuale (vedi "Gap identificati" più sotto).</p>
 </div>
 
-<h3>Confronto con le LLM: estrazione delle triple dal caso Biden/Robocall</h3>
-<p>Per verificare la generalizzabilità del metodo già adottato nel progetto originale, lo stesso prompt è stato sottoposto a più modelli linguistici, chiedendo l'estrazione delle triple RDF per il caso del robocall deepfake di Biden, usando l'estensione ontologica appena introdotta.</p>
-<div class="prompt">"Genera triple RDF in formato Turtle usando l'ontologia pd: (con le proprietà createdBy, verifiedBy, verificationStatus, reportedOn) per rappresentare: un audio deepfake della voce di Joe Biden è stato diffuso tramite chiamate telefoniche automatiche (robocall) il 21 gennaio 2024, due giorni prima delle primarie democratiche del New Hampshire, per scoraggiare gli elettori dal votare. L'autore, Steve Kramer, è stato identificato e la FCC ha confermato i fatti il 23 maggio 2024."</div>
+<h3>Confronto con le LLM: tre tecniche, tre casi, quattro modelli</h3>
+<p>Per verificare la generalizzabilità del metodo già adottato nel progetto originale, ciascuna delle tre tecniche di prompting è stata applicata a un caso diverso tra quelli appena introdotti — esattamente come nella sezione <a href="#llm">Arricchimento</a> — su tre modelli linguistici (ChatGPT, Claude, Gemini), usando l'estensione ontologica su fonte, credibilità e tracciabilità.</p>
 
+<h3 style="margin-top:1.5rem;">Tecnica 1 — Zero-Shot (caso Biden/Robocall)</h3>
+<div class="prompt">"Genera triple RDF in formato Turtle per rappresentare semanticamente il seguente evento, usando l'ontologia pd: (namespace https://ale19ssia.github.io/Deepfake-Knowledge-Graph-Project/ontology#): un audio deepfake della voce di Joe Biden è stato diffuso tramite chiamate telefoniche automatiche (robocall) il 21 gennaio 2024, due giorni prima delle primarie democratiche del New Hampshire, per scoraggiare gli elettori dal votare. L'autore, Steve Kramer, è stato identificato e la FCC ha confermato i fatti il 23 maggio 2024."</div>
 <div class="shot-group">
 <div class="model-label">ChatGPT</div>
-<img class="screenshot" src="integrazione_chatgpt.png" alt="Estrazione triple ChatGPT — caso Biden Robocall">
+<img class="screenshot" src="integrazione_zeroshot_chatgpt.png" alt="Zero-shot ChatGPT — caso Biden Robocall">
 <div class="model-label">Claude</div>
-<img class="screenshot" src="integrazione_claude.png" alt="Estrazione triple Claude — caso Biden Robocall">
+<img class="screenshot" src="integrazione_zeroshot_claude.png" alt="Zero-shot Claude — caso Biden Robocall">
 <div class="model-label">Gemini</div>
-<img class="screenshot" src="integrazione_gemini.png" alt="Estrazione triple Gemini — caso Biden Robocall">
-<div class="model-label">DeepSeek</div>
-<img class="screenshot" src="integrazione_deepseek.png" alt="Estrazione triple DeepSeek — caso Biden Robocall">
+<img class="screenshot" src="integrazione_zeroshot_gemini.png" alt="Zero-shot Gemini — caso Biden Robocall">
 </div>
 
-<p>[Qui, dopo aver fatto gli screenshot, scrivi 2-3 frasi di confronto: quale modello ha usato meglio le nuove proprietà createdBy/verifiedBy? Qualcuno ha inventato dati non presenti nel prompt? Qualcuno ha proposto proprietà aggiuntive utili?]</p>
+<h3 style="margin-top:1.5rem;">Tecnica 2 — Few-Shot (caso Harris/Musk)</h3>
+<div class="prompt">"Ecco due esempi di triple RDF per eventi di deepfake, incluse le proprietà per tracciare fonte e credibilità:<br><br>
+ESEMPIO 1:<br>
+pd:Deepfake_Meloni_Facebook_2024 a pd:DeepfakeEvent .<br>
+pd:Deepfake_Meloni_Facebook_2024 pd:involves pd:Giorgia_Meloni .<br>
+pd:Deepfake_Meloni_Facebook_2024 pd:usedTechnique pd:LipSync .<br><br>
+ESEMPIO 2:<br>
+pd:Deepfake_Biden_Robocall_2024 a pd:DeepfakeEvent .<br>
+pd:Deepfake_Biden_Robocall_2024 pd:createdBy pd:Steve_Kramer .<br>
+pd:Deepfake_Biden_Robocall_2024 pd:verifiedBy pd:FCC .<br>
+pd:Deepfake_Biden_Robocall_2024 pd:verificationStatus &quot;Confirmed&quot; .<br><br>
+Ora genera triple simili per: un video deepfake di Kamala Harris, con audio clonato che la fa sembrare screditare Biden e definirsi 'diversity hire', pubblicato su X il 26 luglio 2024 da un account satirico (Chris Kohls, @MrReaganUSA) e reso virale da Elon Musk senza etichetta di parodia."</div>
+<div class="shot-group">
+<div class="model-label">ChatGPT</div>
+<img class="screenshot" src="integrazione_fewshot_chatgpt.png" alt="Few-shot ChatGPT — caso Harris Musk">
+<div class="model-label">Claude</div>
+<img class="screenshot" src="integrazione_fewshot_claude.png" alt="Few-shot Claude — caso Harris Musk">
+<div class="model-label">Gemini</div>
+<img class="screenshot" src="integrazione_fewshot_gemini.png" alt="Few-shot Gemini — caso Harris Musk">
+</div>
+
+<h3 style="margin-top:1.5rem;">Tecnica 3 — Chain-of-Thought (caso Swift/Trump)</h3>
+<div class="prompt">"Prima di generare le triple RDF, ragiona passo per passo: 1) identifica le entità coinvolte, 2) le relazioni tra loro, 3) le proprietà rilevanti incluse quelle su fonte/credibilità, 4) genera le triple in Turtle usando il namespace pd:. Evento: il 18 agosto 2024 Donald Trump ha condiviso su Truth Social immagini generate con IA che mostravano Taylor Swift vestita da 'Zio Sam' con la scritta 'Taylor wants you to vote for Donald Trump', suggerendo un falso endorsement mai avvenuto."</div>
+<div class="shot-group">
+<div class="model-label">ChatGPT</div>
+<img class="screenshot" src="integrazione_cot_chatgpt1.png" alt="Chain-of-thought ChatGPT parte 1 — caso Swift Trump"><img class="screenshot" src="integrazione_cot_chatgpt2.png" alt="Chain-of-thought ChatGPT parte 2 — caso Swift Trump">
+<div class="model-label">Claude</div>
+<img class="screenshot" src="integrazione_cot_claude1.png" alt="Chain-of-thought Claude parte 1 — caso Swift Trump"><img class="screenshot" src="integrazione_cot_claude2.png" alt="Chain-of-thought Claude parte 2 — caso Swift Trump">
+<div class="model-label">Gemini</div>
+<img class="screenshot" src="integrazione_cot_gemini1.png" alt="Chain-of-thought Gemini parte 1 — caso Swift Trump"><img class="screenshot" src="integrazione_cot_gemini2.png" alt="Chain-of-thought Gemini parte 2 — caso Swift Trump">
+</div>
+
+<p>[Dopo aver fatto gli screenshot, scrivi 2-3 frasi di confronto: quale modello ha usato meglio le nuove proprietà createdBy/verifiedBy? Qualcuno ha inventato dati non presenti nel prompt? La differenza tra le tecniche è coerente con quanto osservato nella sezione #confronto originale?]</p>
 
 <div class="gap">
 <h3>Gap identificati e proposte di estensione</h3>
