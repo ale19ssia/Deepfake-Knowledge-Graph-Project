@@ -14,6 +14,8 @@
 @prefix dbo:   <http://dbpedia.org/ontology/> .
 @prefix dbr:   <http://dbpedia.org/resource/> .
 @prefix schema: <http://schema.org/> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 
 
 ## ==========================================================================
@@ -52,6 +54,12 @@ pd:PoliticalContext a rdfs:Class ;
     rdfs:label "Political Context"@en ;
     rdfs:label "Contesto Politico"@it ;
     rdfs:comment "Il contesto politico in cui l'evento deepfake si inserisce."@it .
+
+pd:Source a rdfs:Class ;
+    rdfs:label "Source"@en ;
+    rdfs:label "Fonte"@it ;
+    rdfs:comment "Un'organizzazione o persona che ha documentato, verificato o smentito un evento deepfake."@it ;
+    rdfs:subClassOf prov:Agent .
 
 
 ## ==========================================================================
@@ -93,9 +101,30 @@ pd:context a rdf:Property ;
     rdfs:domain pd:DeepfakeEvent ;
     rdfs:range pd:PoliticalContext .
 
+pd:verifiedBy a rdf:Property ;
+    rdfs:label "verified by"@en ;
+    rdfs:label "verificato da"@it ;
+    rdfs:comment "Collega un evento deepfake alla fonte che lo ha verificato."@it ;
+    rdfs:domain pd:DeepfakeEvent ;
+    rdfs:range pd:Source .
+
+pd:createdBy a rdf:Property ;
+    rdfs:label "created by"@en ;
+    rdfs:label "creato da"@it ;
+    rdfs:comment "Autore del contenuto sintetico, persona o organizzazione, quando identificato."@it ;
+    rdfs:domain pd:DeepfakeEvent ;
+    rdfs:range prov:Agent .
+
+pd:amplifiedBy a rdf:Property ;
+    rdfs:label "amplified by"@en ;
+    rdfs:label "amplificato da"@it ;
+    rdfs:comment "Attore che ha causato la diffusione virale di un evento deepfake senza esserne l'autore originale."@it ;
+    rdfs:domain pd:DeepfakeEvent ;
+    rdfs:range prov:Agent .
+
 
 ## ==========================================================================
-## T-BOX — Data Property (valore letterale)
+## T-BOX — Data Properties (valori letterali)
 ## ==========================================================================
 
 pd:democraticRiskLevel a rdf:Property ;
@@ -104,6 +133,27 @@ pd:democraticRiskLevel a rdf:Property ;
     rdfs:comment "Indica il livello di rischio per la democrazia: High, Medium o Low."@it ;
     rdfs:domain pd:DeepfakeEvent ;
     rdfs:range xsd:string .
+
+pd:credibilityLevel a rdf:Property ;
+    rdfs:label "credibility level"@en ;
+    rdfs:label "livello di credibilità"@it ;
+    rdfs:comment "Affidabilità della fonte (High/Medium/Low). Distinto da verificationStatus, che indica l'esito della verifica e non l'affidabilità di chi verifica."@it ;
+    rdfs:domain pd:Source ;
+    rdfs:range xsd:string .
+
+pd:verificationStatus a rdf:Property ;
+    rdfs:label "verification status"@en ;
+    rdfs:label "stato di verifica"@it ;
+    rdfs:comment "Confirmed, Disputed o Unverified."@it ;
+    rdfs:domain pd:DeepfakeEvent ;
+    rdfs:range xsd:string .
+
+pd:reportedOn a rdf:Property ;
+    rdfs:label "reported on"@en ;
+    rdfs:label "data di segnalazione"@it ;
+    rdfs:comment "Data in cui la fonte ha pubblicato la verifica dell'evento."@it ;
+    rdfs:domain pd:DeepfakeEvent ;
+    rdfs:range xsd:date .
 
 
 ## ==========================================================================
@@ -127,6 +177,18 @@ pd:Instagram a pd:Platform ;
     rdfs:label "Instagram"@en ;
     owl:sameAs dbr:Instagram .
 
+pd:X_Twitter a pd:Platform ;
+    rdfs:label "X (Twitter)"@en ;
+    owl:sameAs dbr:Twitter .
+
+pd:TruthSocial a pd:Platform ;
+    rdfs:label "Truth Social"@en ;
+    owl:sameAs dbr:Truth_Social .
+
+pd:Robocall a pd:Platform ;
+    rdfs:label "Robocall / Automated phone call"@en ;
+    rdfs:label "Chiamata automatica telefonica"@it .
+
 ## Tecniche di manipolazione
 pd:FaceSwap a pd:ManipulationTechnique ;
     rdfs:label "Face Swap"@en ;
@@ -134,11 +196,15 @@ pd:FaceSwap a pd:ManipulationTechnique ;
 
 pd:VoiceCloning a pd:ManipulationTechnique ;
     rdfs:label "Voice Cloning"@en ;
-    rdfs:comment "Sintesi artificiale della voce di una persona reale."@it .
+    rdfs:comment "Sintesi artificiale della voce di una persona reale, spesso sovrapposta a filmati autentici."@it .
 
 pd:LipSync a pd:ManipulationTechnique ;
     rdfs:label "Lip Sync"@en ;
     rdfs:comment "Sincronizzazione artificiale del movimento labiale con un audio manipolato."@it .
+
+pd:ImageSynthesis a pd:ManipulationTechnique ;
+    rdfs:label "AI Image Synthesis"@en ;
+    rdfs:label "Sintesi di immagini tramite IA generativa"@it .
 
 ## Emozioni
 pd:Fear a pd:Emotion ;
@@ -153,6 +219,14 @@ pd:Distrust a pd:Emotion ;
     rdfs:label "Distrust"@en ;
     rdfs:label "Sfiducia"@it .
 
+pd:Confusion a pd:Emotion ;
+    rdfs:label "Confusion"@en ;
+    rdfs:label "Confusione"@it .
+
+pd:Ridicule a pd:Emotion ;
+    rdfs:label "Ridicule"@en ;
+    rdfs:label "Scherno"@it .
+
 ## Contesti politici
 pd:USElectionCampaign2024 a pd:PoliticalContext ;
     rdfs:label "US Presidential Election Campaign 2024"@en ;
@@ -162,6 +236,10 @@ pd:USElectionCampaign2024 a pd:PoliticalContext ;
 pd:ItalianMigrationPolicy a pd:PoliticalContext ;
     rdfs:label "Italian Migration Policy Debate"@en ;
     rdfs:label "Dibattito sulla politica migratoria italiana"@it .
+
+pd:NHPrimary2024 a pd:PoliticalContext ;
+    rdfs:label "New Hampshire Democratic Primary 2024"@en ;
+    owl:sameAs dbr:2024_New_Hampshire_Democratic_presidential_primary .
 
 
 ## ==========================================================================
@@ -179,6 +257,30 @@ pd:Donald_Trump a pd:Politician ;
 pd:Giorgia_Meloni a pd:Politician ;
     rdfs:label "Giorgia Meloni"@en ;
     owl:sameAs dbr:Giorgia_Meloni .
+
+pd:Kamala_Harris a pd:Politician ;
+    rdfs:label "Kamala Harris"@en ;
+    owl:sameAs dbr:Kamala_Harris .
+
+
+## ==========================================================================
+## A-BOX — Istanze: fonti e agenti (persone/organizzazioni)
+## ==========================================================================
+
+pd:FCC a pd:Source ;
+    rdfs:label "Federal Communications Commission"@en ;
+    pd:credibilityLevel "High" ;
+    owl:sameAs dbr:Federal_Communications_Commission .
+
+pd:Steve_Kramer a foaf:Person ;
+    rdfs:label "Steve Kramer"@en .
+
+pd:Elon_Musk a foaf:Person ;
+    rdfs:label "Elon Musk"@en ;
+    owl:sameAs dbr:Elon_Musk .
+
+pd:MrReaganUSA a foaf:Person ;
+    rdfs:label "Chris Kohls (@MrReaganUSA)"@en .
 
 
 ## ==========================================================================
@@ -209,89 +311,12 @@ pd:Deepfake_Meloni_Facebook_2024 a pd:DeepfakeEvent ;
     pd:targetEmotion pd:Anger ;
     pd:context pd:ItalianMigrationPolicy ;
     pd:democraticRiskLevel "High" .
+
+
 ## ==========================================================================
 ## ESTENSIONE — Integrazione richiesta dalla Prof.ssa Presutti
-## Fonte, credibilità, tracciabilità + casi reali (USA, 2024)
+## Fonte, credibilità, tracciabilità + 3 casi reali USA (2024)
 ## ==========================================================================
-
-## --------------------------------------------------------------------------
-## T-BOX — Nuove classi
-## --------------------------------------------------------------------------
-
-pd:Source a rdfs:Class ;
-    rdfs:label "Source"@en ;
-    rdfs:label "Fonte"@it ;
-    rdfs:comment "Un'organizzazione o persona che ha documentato, verificato o smentito un evento deepfake."@it ;
-    rdfs:subClassOf prov:Agent .
-
-## --------------------------------------------------------------------------
-## T-BOX — Nuove proprietà
-## --------------------------------------------------------------------------
-
-pd:verifiedBy a rdf:Property ;
-    rdfs:label "verified by"@en ; rdfs:label "verificato da"@it ;
-    rdfs:domain pd:DeepfakeEvent ; rdfs:range pd:Source .
-
-pd:createdBy a rdf:Property ;
-    rdfs:label "created by"@en ; rdfs:label "creato da"@it ;
-    rdfs:comment "Autore del contenuto sintetico, persona o organizzazione, quando identificato."@it ;
-    rdfs:domain pd:DeepfakeEvent ; rdfs:range prov:Agent .
-
-pd:amplifiedBy a rdf:Property ;
-    rdfs:label "amplified by"@en ; rdfs:label "amplificato da"@it ;
-    rdfs:comment "Attore che ha causato la diffusione virale senza esserne l'autore originale."@it ;
-    rdfs:domain pd:DeepfakeEvent ; rdfs:range prov:Agent .
-
-pd:credibilityLevel a rdf:Property ;
-    rdfs:label "credibility level"@en ; rdfs:label "livello di credibilità"@it ;
-    rdfs:comment "Affidabilità della fonte (High/Medium/Low). Distinto da verificationStatus, che indica l'esito della verifica."@it ;
-    rdfs:domain pd:Source ; rdfs:range xsd:string .
-
-pd:verificationStatus a rdf:Property ;
-    rdfs:label "verification status"@en ; rdfs:label "stato di verifica"@it ;
-    rdfs:comment "Confirmed, Disputed o Unverified."@it ;
-    rdfs:domain pd:DeepfakeEvent ; rdfs:range xsd:string .
-
-pd:reportedOn a rdf:Property ;
-    rdfs:label "reported on"@en ; rdfs:label "data di segnalazione"@it ;
-    rdfs:domain pd:DeepfakeEvent ; rdfs:range xsd:date .
-
-## --------------------------------------------------------------------------
-## A-BOX — Istanze aggiuntive: persone, piattaforme, tecniche, emozioni, fonti
-## --------------------------------------------------------------------------
-
-pd:Joe_Biden a pd:Politician ; rdfs:label "Joe Biden"@en ; owl:sameAs dbr:Joe_Biden .
-pd:Kamala_Harris a pd:Politician ; rdfs:label "Kamala Harris"@en ; owl:sameAs dbr:Kamala_Harris .
-pd:Donald_Trump a pd:Politician ; rdfs:label "Donald Trump"@en ; owl:sameAs dbr:Donald_Trump .
-
-pd:Robocall a pd:Platform ;
-    rdfs:label "Robocall / Automated phone call"@en ; rdfs:label "Chiamata automatica telefonica"@it .
-
-pd:X_Twitter a pd:Platform ; rdfs:label "X (Twitter)"@en ; owl:sameAs dbr:Twitter .
-pd:TruthSocial a pd:Platform ; rdfs:label "Truth Social"@en ; owl:sameAs dbr:Truth_Social .
-
-pd:VoiceCloning a pd:ManipulationTechnique ;
-    rdfs:label "Voice Cloning"@en ;
-    rdfs:comment "Sintesi artificiale della voce di una persona reale, spesso sovrapposta a filmati autentici."@it .
-
-pd:ImageSynthesis a pd:ManipulationTechnique ;
-    rdfs:label "AI Image Synthesis"@en ; rdfs:label "Sintesi di immagini tramite IA generativa"@it .
-
-pd:Confusion a pd:Emotion ; rdfs:label "Confusion"@en ; rdfs:label "Confusione"@it .
-pd:Ridicule a pd:Emotion ; rdfs:label "Ridicule"@en ; rdfs:label "Scherno"@it .
-
-pd:NHPrimary2024 a pd:PoliticalContext ;
-    rdfs:label "New Hampshire Democratic Primary 2024"@en ;
-    owl:sameAs dbr:2024_New_Hampshire_Democratic_presidential_primary .
-
-pd:FCC a pd:Source ;
-    rdfs:label "Federal Communications Commission"@en ;
-    pd:credibilityLevel "High" ;
-    owl:sameAs dbr:Federal_Communications_Commission .
-
-pd:Steve_Kramer a foaf:Person ; rdfs:label "Steve Kramer"@en .
-pd:Elon_Musk a foaf:Person ; rdfs:label "Elon Musk"@en ; owl:sameAs dbr:Elon_Musk .
-pd:MrReaganUSA a foaf:Person ; rdfs:label "Chris Kohls (@MrReaganUSA)"@en .
 
 ## --------------------------------------------------------------------------
 ## A-BOX — Caso 1: Robocall deepfake di Biden (NH Primary, gen. 2024)
@@ -311,6 +336,7 @@ pd:Deepfake_Biden_Robocall_2024 a pd:DeepfakeEvent ;
     pd:verificationStatus "Confirmed" ;
     pd:reportedOn "2024-05-23"^^xsd:date .
 
+
 ## --------------------------------------------------------------------------
 ## A-BOX — Caso 2: video deepfake di Harris amplificato da Musk (lug. 2024)
 ## --------------------------------------------------------------------------
@@ -328,6 +354,7 @@ pd:Deepfake_Harris_Musk_2024 a pd:DeepfakeEvent ;
     pd:amplifiedBy pd:Elon_Musk ;
     pd:verificationStatus "Confirmed" ;
     pd:reportedOn "2024-07-29"^^xsd:date .
+
 
 ## --------------------------------------------------------------------------
 ## A-BOX — Caso 3: immagini AI "Swift endorsa Trump" (ago. 2024)
