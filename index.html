@@ -559,20 +559,47 @@ pd:Deepfake_Biden_Robocall_2024 a pd:DeepfakeEvent ;
 <p>Le query seguenti sono state eseguite direttamente sul file <code>deepfake-ontology.ttl</code> aggiornato, per verificare che l'estensione sia effettivamente interrogabile e per rendere visibili i gap identificati.</p>
 
 <div class="qcard">
-<div class="qkeys"><span>FILTER</span></div>
+<div class="qkeys"><span>DISTINCT</span><span>FILTER</span><span>ORDER BY</span><span>LIMIT</span></div>
 <h3>Query I1 — Eventi con rischio democratico "High"</h3>
 <pre>PREFIX pd: &lt;https://ale19ssia.github.io/Deepfake-Knowledge-Graph-Project/ontology#&gt;
 PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
 
-SELECT ?event ?label
+SELECT DISTINCT ?event ?label
 WHERE {
   ?event a pd:DeepfakeEvent ;
          rdfs:label ?label ;
          pd:democraticRiskLevel "High" .
   FILTER(lang(?label) = "en")
-}</pre>
+}
+ORDER BY ?label
+LIMIT 10</pre>
 <img class="screenshot" src="query_i1.png" alt="Risultati Query I1 — eventi ad alto rischio democratico">
-<p class="shot-caption">Risultati della Query I1 — quattro eventi su cinque hanno rischio democratico "High".</p>
+<p class="shot-caption">Risultati della Query I1 — quattro eventi su cinque hanno rischio democratico "High", ordinati alfabeticamente.</p>
+</div>
+
+<div class="qcard">
+<div class="qkeys"><span>UNION</span><span>REGEX</span><span>DISTINCT</span><span>ORDER BY</span></div>
+<h3>Query I4 — Persone/fonti il cui nome contiene "Biden" o "Musk"</h3>
+<pre>PREFIX pd: &lt;https://ale19ssia.github.io/Deepfake-Knowledge-Graph-Project/ontology#&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+
+SELECT DISTINCT ?entity ?label ?type
+WHERE {
+  {
+    ?entity a pd:Politician ; rdfs:label ?label .
+    BIND("Politician" AS ?type)
+  }
+  UNION
+  {
+    ?entity a foaf:Person ; rdfs:label ?label .
+    BIND("Person/Source" AS ?type)
+  }
+  FILTER(REGEX(?label, "Biden|Musk", "i"))
+}
+ORDER BY ?type ?label</pre>
+<img class="screenshot" src="query_i4.png" alt="Risultati Query I4 — Politician e Person/Source uniti con UNION">
+<p class="shot-caption">Risultati della Query I4 — UNION combina due classi diverse (politici e fonti/persone), REGEX filtra per nome: Elon Musk (Person/Source) e Joe Biden (Politician).</p>
 </div>
 
 <div class="qcard">
