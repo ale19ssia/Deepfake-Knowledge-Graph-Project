@@ -694,7 +694,36 @@ Ora genera triple simili per: un video deepfake di Kamala Harris, con audio clon
 </div>
 
 <h3>Un processo per l'aggiornamento automatico del Knowledge Graph</h3>
-<p>[Qui va la sintesi del punto 2 della mail della prof — fonti, sequenza di attività, strumenti software, validazione.]</p>
+<p>La mail della prof.ssa Presutti chiede anche di progettare un processo che renda automatico l'aggiornamento del KG: quali fonti usare, quale sequenza di attività, quali strumenti software, e come validare per evitare di inserire informazioni scorrette. Il processo proposto riusa direttamente la pipeline di estrazione LLM già sperimentata in questo progetto (sezione <a href="#llm">Arricchimento</a>), inserendola in un ciclo continuo con validazione automatica.</p>
+
+<h3>Fonti</h3>
+<ul class="clean">
+  <li><strong>Fact-checker e organi di verifica</strong> — es. la Federal Communications Commission per i casi statunitensi già trattati, o l'AI Incident Database, un repository curato di incidenti documentati legati all'IA.</li>
+  <li><strong>News API</strong> (es. GDELT, NewsAPI) per intercettare articoli freschi su nuovi casi, filtrati per parole chiave ("deepfake", "AI-generated", "synthetic media" + nome di un politico).</li>
+  <li><strong>DBpedia/Wikidata</strong> per l'entity linking delle entità già note (politici, piattaforme, eventi).</li>
+</ul>
+
+<h3>Sequenza di attività</h3>
+<ul class="clean">
+  <li><strong>1. Harvesting</strong> — interrogazione periodica delle fonti sopra, con filtro su parole chiave rilevanti.</li>
+  <li><strong>2. Estrazione</strong> — lo stesso prompting LLM già testato in questo progetto (zero-shot/few-shot/CoT) applicato al testo grezzo dell'articolo, per estrarre entità e relazioni in formato strutturato.</li>
+  <li><strong>3. Entity linking</strong> — le entità estratte vengono collegate a URI DBpedia/Wikidata già esistenti tramite strumenti come DBpedia Spotlight, per riusare istanze anziché duplicarle.</li>
+  <li><strong>4. Generazione delle triple</strong> — mapping del testo strutturato sulle classi/proprietà dell'ontologia <code>pd:</code>, con uno script Python (<code>rdflib</code>).</li>
+  <li><strong>5. Validazione</strong> — vedi sotto.</li>
+  <li><strong>6. Ingestion</strong> — le triple validate vengono caricate in un triple store tramite SPARQL UPDATE (es. Apache Jena Fuseki).</li>
+</ul>
+
+<h3>Strumenti software</h3>
+<p><code>rdflib</code> (Python) per costruire e manipolare i grafi · un'API LLM per l'estrazione, con prompt vincolato allo schema dell'ontologia · DBpedia Spotlight per l'entity linking · Apache Jena Fuseki come triple store con endpoint SPARQL · <code>pySHACL</code> per la validazione formale · un orchestratore (cron job o Apache Airflow) per schedulare la pipeline.</p>
+
+<h3>Validazione, per evitare dati scorretti o non fondati</h3>
+<ul class="clean">
+  <li><strong>SHACL shapes</strong> — vincoli formali su dominio, range e cardinalità (es. un <code>pd:DeepfakeEvent</code> deve avere almeno un <code>pd:verifiedBy</code> prima di poter essere inserito); le triple che violano le shape vengono scartate automaticamente.</li>
+  <li><strong>Cross-source check</strong> — una tripla viene ingerita solo se corroborata da almeno 2 fonti indipendenti.</li>
+  <li><strong>Soglia di confidenza</strong> — se l'LLM restituisce un punteggio di confidenza sull'estrazione, si scarta sotto una soglia definita.</li>
+  <li><strong>Human-in-the-loop</strong> — le triple che superano i controlli automatici ma riguardano casi ad alto rischio democratico finiscono in una coda di revisione umana prima della pubblicazione definitiva.</li>
+  <li><strong>Deduplicazione</strong> — controllo <code>owl:sameAs</code>/similarità testuale per evitare eventi duplicati inseriti da fonti diverse.</li>
+</ul>
 
 </section>
 
