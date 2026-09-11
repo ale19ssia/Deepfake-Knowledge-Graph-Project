@@ -536,7 +536,7 @@ pd:Deepfake_Biden_TikTok_2024 pd:context pd:USElectionCampaign2024 .</pre>
 <h3>I tre casi scelti</h3>
 <p>Sono stati selezionati tre casi reali statunitensi del 2024, ciascuno con una fonte di verifica identificabile e documentata:</p>
 <ul class="clean">
-<li><strong>Robocall deepfake di Biden</strong> — audio clonato diffuso telefonicamente prima delle <a href="http://dbpedia.org/resource/2024_New_Hampshire_Democratic_presidential_primary" target="_blank">primarie del New Hampshire</a> (gennaio 2024), autore identificato e multato dalla <a href="http://dbpedia.org/resource/Federal_Communications_Commission" target="_blank">FCC</a>.</li>
+<li><strong>Robocall deepfake di Biden</strong> — audio clonato diffuso telefonicamente prima delle primarie del New Hampshire (gennaio 2024), autore identificato e multato dalla <a href="http://dbpedia.org/resource/Federal_Communications_Commission" target="_blank">FCC</a>.</li>
 <li><strong>Video deepfake di Harris amplificato da <a href="http://dbpedia.org/resource/Elon_Musk" target="_blank">Musk</a></strong> — audio manipolato su <a href="http://dbpedia.org/resource/Twitter" target="_blank">X</a>, creato da un account satirico e reso virale senza etichetta di parodia (luglio 2024).</li>
 <li><strong>Falso endorsement di <a href="http://dbpedia.org/resource/Taylor_Swift" target="_blank">Taylor Swift</a> a <a href="http://dbpedia.org/resource/Donald_Trump" target="_blank">Trump</a></strong> — immagini generate con IA diffuse su <a href="http://dbpedia.org/resource/Truth_Social" target="_blank">Truth Social</a> e X (agosto 2024).</li>
 </ul>
@@ -578,31 +578,6 @@ LIMIT 10</pre>
 </div>
 
 <div class="qcard">
-<div class="qkeys"><span>UNION</span><span>REGEX</span><span>DISTINCT</span><span>ORDER BY</span></div>
-<h3>Query I4 — Persone/fonti il cui nome contiene "Biden" o "Musk"</h3>
-<pre>PREFIX pd: &lt;https://ale19ssia.github.io/Deepfake-Knowledge-Graph-Project/ontology#&gt;
-PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
-PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
-
-SELECT DISTINCT ?entity ?label ?type
-WHERE {
-  {
-    ?entity a pd:Politician ; rdfs:label ?label .
-    BIND("Politician" AS ?type)
-  }
-  UNION
-  {
-    ?entity a foaf:Person ; rdfs:label ?label .
-    BIND("Person/Source" AS ?type)
-  }
-  FILTER(REGEX(?label, "Biden|Musk", "i"))
-}
-ORDER BY ?type ?label</pre>
-<img class="screenshot" src="query_i4.png" alt="Risultati Query I4 — Politician e Person/Source uniti con UNION">
-<p class="shot-caption">Risultati della Query I4 — UNION combina due classi diverse (politici e fonti/persone), REGEX filtra per nome: Elon Musk (Person/Source) e Joe Biden (Politician).</p>
-</div>
-
-<div class="qcard">
 <div class="qkeys"><span>OPTIONAL</span></div>
 <h3>Query I2 — Chi ha creato vs chi ha amplificato ogni evento</h3>
 <pre>PREFIX pd: &lt;https://ale19ssia.github.io/Deepfake-Knowledge-Graph-Project/ontology#&gt;
@@ -635,7 +610,32 @@ WHERE {
 <p class="shot-caption">Risultati della Query I3 — il caso Swift/Trump non ha un'emozione bersaglio: il suo obiettivo persuasivo, il falso endorsement, non è catturato dalla classe <code>pd:Emotion</code> attuale (vedi "Gap identificati" più sotto).</p>
 </div>
 
-<h3>Confronto con le LLM: tre tecniche, tre casi, quattro modelli</h3>
+<div class="qcard">
+<div class="qkeys"><span>UNION</span><span>REGEX</span><span>DISTINCT</span><span>ORDER BY</span></div>
+<h3>Query I4 — Persone/fonti il cui nome contiene "Biden" o "Musk"</h3>
+<pre>PREFIX pd: &lt;https://ale19ssia.github.io/Deepfake-Knowledge-Graph-Project/ontology#&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+
+SELECT DISTINCT ?entity ?label ?type
+WHERE {
+  {
+    ?entity a pd:Politician ; rdfs:label ?label .
+    BIND("Politician" AS ?type)
+  }
+  UNION
+  {
+    ?entity a foaf:Person ; rdfs:label ?label .
+    BIND("Person/Source" AS ?type)
+  }
+  FILTER(REGEX(?label, "Biden|Musk", "i"))
+}
+ORDER BY ?type ?label</pre>
+<img class="screenshot" src="query_i4.png" alt="Risultati Query I4 — Politician e Person/Source uniti con UNION">
+<p class="shot-caption">Risultati della Query I4 — UNION combina due classi diverse (politici e fonti/persone), REGEX filtra per nome: Elon Musk (Person/Source) e Joe Biden (Politician).</p>
+</div>
+
+<h3>Confronto con le LLM: tre tecniche, tre casi, tre modelli</h3>
 <p>Per verificare la generalizzabilità del metodo già adottato nel progetto originale, ciascuna delle tre tecniche di prompting è stata applicata a un caso diverso tra quelli appena introdotti — esattamente come nella sezione <a href="#llm">Arricchimento</a> — su tre modelli linguistici (ChatGPT, Claude, Gemini), usando l'estensione ontologica su fonte, credibilità e tracciabilità.</p>
 
 <h3 style="margin-top:1.5rem;">Tecnica 1 — Zero-Shot (caso Biden/Robocall)</h3>
